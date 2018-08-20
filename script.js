@@ -58,12 +58,48 @@ function validateRequired() {
     }
 }
 
+function zeroPlaceHolder() {
+    var addressBox = document.getElementById("addrinput");
+    addressBox.style.color = "black";
+    if (addressBox.value === "") {
+        addressBox.value = "";
+    }
+}
+/* restore placeholder text if box contains no user entry*/
+function checkPlaceholder() {
+    var addressBox = document.getElementById("addrinput");
+    if (addressBox.value === "") {
+        addressBox.style.color = "rgb(178,184,183)";
+        addressBox.value = addressBox.placeholder;
+    }
+}
+/*add placeholder text for browsers that dont suport placeholder attribute
+*/
+function generatePlaceholder() {
+    if (!Modernizer.input.placeholder) {
+        var addressBox = document.getElementById("addrinput");
+        addressBox.value = addressBox.placeholder;
+        addressBox.style.color = "rgb(178,184,183)";
+        if (addressBox.addEventListener) {
+            addressBox.addEventListener("focus", zeroPlaceHolder,false);
+
+        }
+        else if (addressBox.attachEvent){
+            addressBox.attachEvent("onfocus", zeroPlaceHolder);
+            addressBox.attachEvent("onblur", checkPlaceholder)
+        }
+    }
+}
+
 function setUpPage() {
     if (window.addEventListener) {
         window.addEventListener("submit", validateForm, false);
         } else if (window.attachEvent) {
         window.attachEvent("onsubmit", validateForm, false);
         }
+        createEventListener();
+        generatePlaceholder()
+
 }
    
    //page load event handlers
